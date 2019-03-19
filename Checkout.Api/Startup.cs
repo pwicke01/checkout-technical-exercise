@@ -30,7 +30,8 @@ namespace Checkout.Api
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<CheckoutContext>(opt => opt.UseInMemoryDatabase("Checkout"));
-      services.AddScoped<CheckoutService>();
+      services.AddScoped<CustomerService>();
+      services.AddScoped<BasketService>();
 
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
