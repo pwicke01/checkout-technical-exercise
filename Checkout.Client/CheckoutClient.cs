@@ -10,15 +10,18 @@ namespace Checkout.Client
   {
     private readonly HttpClient _http;
 
-    public CheckoutClient(HttpClient http, string baseUri)
+    public CheckoutClient(HttpClient http, string baseUrl)
     {
+      if (baseUrl == null)
+        throw new ArgumentNullException("Client must have a base URL");
+
+      http.BaseAddress = new Uri(baseUrl);
       _http = http;
-      _http.BaseAddress = new Uri(baseUri);
     }
 
     public async Task<Customer[]> GetCustomers()
     {
-      return await _http.Get<Customer[]>("/api/checkout/customer");
+      return await _http.Get<Customer[]>("api/checkout/customer");
     }
   }
 }
