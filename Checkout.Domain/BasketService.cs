@@ -33,7 +33,6 @@ namespace Checkout.Domain
       {
         item.Quantity += request.Quantity;
 
-        _checkoutContext.Items.Update(item);
         await _checkoutContext.SaveChangesAsync();
       }
       else
@@ -48,7 +47,7 @@ namespace Checkout.Domain
             ProductId = request.ProductId,
             Quantity = request.Quantity
           };
-
+          
           await _checkoutContext.Items.AddAsync(item);
           await _checkoutContext.SaveChangesAsync();
         }
@@ -68,16 +67,15 @@ namespace Checkout.Domain
 
       var quantity = request.Quantity ?? 0;
 
-      if (item != null && quantity > 0)
+      if (item != null)
       {
         if(request.RemoveAll ?? false || quantity >= item.Quantity)
         {
           _checkoutContext.Remove(item);
         }
-        else
+        else if(quantity > 0)
         {
           item.Quantity -= quantity;
-          _checkoutContext.Items.Update(item);
         }
 
         await _checkoutContext.SaveChangesAsync();
