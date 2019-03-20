@@ -12,7 +12,7 @@ namespace Checkout.Models
     public string Name { get; set; }
     public string Description { get; set; }
 
-    [JsonIgnore]
+    //[JsonIgnore]
     public Collection<Item> Items { get; set; }
   }
 }

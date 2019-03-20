@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Checkout.Api
@@ -33,7 +34,9 @@ namespace Checkout.Api
       services.AddScoped<CustomerService>();
       services.AddScoped<BasketService>();
 
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+        .AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented)
+        .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
       services.AddSwaggerGen(x =>
       {

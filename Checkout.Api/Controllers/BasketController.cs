@@ -13,6 +13,7 @@ using Checkout.Utils;
 namespace Checkout.Api.Controllers
 {
   [Route("api/basket")]
+  [Produces("application/json")]
   [ApiController]
   public class BasketController : ControllerBase
   {
@@ -25,22 +26,35 @@ namespace Checkout.Api.Controllers
       _checkoutContext = checkoutContext;
     }
 
-    [HttpPut("addItem")]
-    public async Task AddItem([FromBody] AddItemRequest request)
+    [HttpPut("items")]
+    public async Task AddItems([FromBody] AddItemsRequest request)
+    {
+      if (request == null || request.Quantity <= 0)
+        BadRequest();
+
+      var customer = await GetCustomer();
+
+      await _serviceProvider.New<BasketService>().PutItemsInBasket(customer.Id, request);
+    }
+
+    [HttpDelete("items")]
+    public async Task RemoveItems([FromBody] RemoveItemsRequest request)
     {
       if (request == null)
         BadRequest();
 
       var customer = await GetCustomer();
 
-      await _serviceProvider.New<BasketService>().PutItemInBasket(customer.Id, request);
+      await _serviceProvider.New<BasketService>().RemoveItemsFromBasket(customer.Id, request);
     }
+
 
     [HttpGet("getCustomerBasket")]
     public async Task<Basket> GetCustomerBasket()
     {
       var customer = await GetCustomer();
 
+      var basket = await _serviceProvider.New<BasketService>().GetCustomerBasket(customer.Id);
       return await _serviceProvider.New<BasketService>().GetCustomerBasket(customer.Id);
     }
 
