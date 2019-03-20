@@ -17,6 +17,10 @@ namespace Checkout.Api.Controllers
       _serviceProvider = serviceProvider;
     }
 
+    /// <summary>
+    /// Retrieves a list of all Products from the Database
+    /// </summary>
+    /// <returns>An array of Product</returns>
     [HttpGet]
     public async Task<Product[]> GetAll()
     {

@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Checkout.Api
 {
@@ -34,7 +37,22 @@ namespace Checkout.Api
 
       services.AddSwaggerGen(x =>
       {
-        x.SwaggerDoc("v1", new Info { Title = "Checkout API", Version = "v1" });
+        x.SwaggerDoc("v1", new Info
+          {
+            Title = "Checkout API",
+            Version = "v1",
+            Description = "An API that allows customers to add products to a basket, remove them or empty the basket altogether.",
+            Contact = new Contact
+            {
+              Email = "phflinckq@hotmail.com",
+              Name = "Philip Wickens"
+            }
+          }
+        );
+
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        x.IncludeXmlComments(xmlPath);
       });
     }
 
