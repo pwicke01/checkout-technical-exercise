@@ -16,7 +16,7 @@ namespace Checkout.Models
 
     [JsonIgnore]
     public Basket Basket { get; set; }
-    [JsonIgnore]
+    
     public Product Product { get; set; }
   }
 }

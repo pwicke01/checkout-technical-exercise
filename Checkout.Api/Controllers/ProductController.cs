@@ -22,7 +22,7 @@ namespace Checkout.Api.Controllers
     [HttpGet]
     public async Task<Product[]> GetAll()
     {
-      return await _serviceProvider.New<ProductService>().GetAll();
+      return await _serviceProvider.New<ProductService>().GetProducts();
     }
 
   }

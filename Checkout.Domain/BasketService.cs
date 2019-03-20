@@ -13,10 +13,12 @@ namespace Checkout.Domain
   public class BasketService
   {
     private readonly CheckoutContext _checkoutContext;
+    private readonly ProductService _productService;
 
-    public BasketService(CheckoutContext checkoutContext)
+    public BasketService(CheckoutContext checkoutContext, ProductService productService)
     {
       _checkoutContext = checkoutContext;
+      _productService = productService;
     }
 
     public async Task AddItemsToBasket(Guid customerId, AddItemsRequest request)
@@ -38,7 +40,8 @@ namespace Checkout.Domain
       }
       else
       {
-        if (_checkoutContext.Products.Any(x => x.Id == request.ProductId))
+        var products = await _productService.GetProducts();
+        if (products.Any(x => x.Id == request.ProductId))
         {
           item = new Item
           {
@@ -87,6 +90,7 @@ namespace Checkout.Domain
     {
       return await _checkoutContext.Baskets
         .Include(x => x.Items)
+        .ThenInclude(x => x.Product)
         .Where(x => x.CustomerId == customerId)
         .FirstOrDefaultAsync();
     }

@@ -17,7 +17,7 @@ namespace Checkout.Domain
       _checkoutContext = checkoutContext;
     }
 
-    public async Task<Product[]> GetAll()
+    public async Task<Product[]> GetProducts()
     {
       if (!await _checkoutContext.Products.AnyAsync())
       {
