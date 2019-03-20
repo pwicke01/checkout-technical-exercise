@@ -3,8 +3,6 @@ using Checkout.Models;
 using Checkout.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Checkout.Api.Controllers

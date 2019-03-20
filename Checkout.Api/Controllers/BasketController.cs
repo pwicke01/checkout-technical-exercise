@@ -1,12 +1,8 @@
-﻿using Checkout.Data;
-using Checkout.Domain;
+﻿using Checkout.Domain;
 using Checkout.Models;
 using Checkout.Models.Requests;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Checkout.Utils;
 
