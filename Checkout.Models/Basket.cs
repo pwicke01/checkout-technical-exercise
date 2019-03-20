@@ -10,7 +10,6 @@ namespace Checkout.Models
     public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
 
-    public DateTime? OrderCompletedAt { get; set; }
     public Collection<Item> Items { get; set; }
   }
 }

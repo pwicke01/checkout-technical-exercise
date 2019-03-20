@@ -19,7 +19,7 @@ namespace Checkout.Domain
       _checkoutContext = checkoutContext;
     }
 
-    public async Task PutItemsInBasket(Guid customerId, AddItemsRequest request)
+    public async Task AddItemsToBasket(Guid customerId, AddItemsRequest request)
     {
       var basket = await GetCustomerBasket(customerId);
 
@@ -38,16 +38,23 @@ namespace Checkout.Domain
       }
       else
       {
-        item = new Item
+        if (_checkoutContext.Products.Any(x => x.Id == request.ProductId))
         {
-          UpdatedAt = DateTime.Now,
-          BasketId = basket.Id,
-          ProductId = request.ProductId,
-          Quantity = request.Quantity
-        };
+          item = new Item
+          {
+            UpdatedAt = DateTime.Now,
+            BasketId = basket.Id,
+            ProductId = request.ProductId,
+            Quantity = request.Quantity
+          };
 
-        await _checkoutContext.Items.AddAsync(item);
-        await _checkoutContext.SaveChangesAsync();
+          await _checkoutContext.Items.AddAsync(item);
+          await _checkoutContext.SaveChangesAsync();
+        }
+        else
+        {
+          throw new Exception("The specified product does not exist");
+        }
       }
     }
 
@@ -76,13 +83,24 @@ namespace Checkout.Domain
       }
     }
 
-
     public async Task<Basket> GetCustomerBasket(Guid customerId)
     {
       return await _checkoutContext.Baskets
         .Include(x => x.Items)
         .Where(x => x.CustomerId == customerId)
         .FirstOrDefaultAsync();
+    }
+
+    public async Task ClearCustomerBasket(Guid customerId)
+    {
+      var basket = await GetCustomerBasket(customerId);
+
+      var items = basket?.Items;
+      if (items != null)
+      {
+        _checkoutContext.Items.RemoveRange(items);
+        await _checkoutContext.SaveChangesAsync();
+      }
     }
 
     private async Task<Basket> CreateBasketForCustomer(Guid customerId)

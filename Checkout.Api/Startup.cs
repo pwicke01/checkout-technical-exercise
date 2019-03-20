@@ -33,6 +33,7 @@ namespace Checkout.Api
       services.AddDbContext<CheckoutContext>(opt => opt.UseInMemoryDatabase("Checkout"));
       services.AddScoped<CustomerService>();
       services.AddScoped<BasketService>();
+      services.AddScoped<ProductService>();
 
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
         .AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented)

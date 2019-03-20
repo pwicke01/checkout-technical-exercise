@@ -13,80 +13,95 @@ using Checkout.Utils;
 namespace Checkout.Api.Controllers
 {
   [Route("api/basket")]
-  [Produces("application/json")]
-  [ApiController]
   public class BasketController : ControllerBase
   {
     private readonly IServiceProvider _serviceProvider;
-    private readonly CheckoutContext _checkoutContext;
-
-    public BasketController(IServiceProvider serviceProvider, CheckoutContext checkoutContext)
+    
+    public BasketController(IServiceProvider serviceProvider)
     {
       _serviceProvider = serviceProvider;
-      _checkoutContext = checkoutContext;
     }
 
     [HttpPut("items")]
-    public async Task AddItems([FromBody] AddItemsRequest request)
+    public async Task<IActionResult> AddItems([FromBody] AddItemsRequest request)
     {
       if (request == null || request.Quantity <= 0)
-        BadRequest();
+        return BadRequest();
 
       var customer = await GetCustomer();
 
-      await _serviceProvider.New<BasketService>().PutItemsInBasket(customer.Id, request);
+      try
+      {
+        await _serviceProvider.New<BasketService>().AddItemsToBasket(customer.Id, request);
+      }
+      catch(Exception ex)
+      {
+        return BadRequest(ex.Message);
+      }
+
+      return Ok();
     }
 
     [HttpDelete("items")]
-    public async Task RemoveItems([FromBody] RemoveItemsRequest request)
+    public async Task<IActionResult> RemoveItems([FromBody] RemoveItemsRequest request)
     {
       if (request == null)
-        BadRequest();
+        return BadRequest();
 
       var customer = await GetCustomer();
 
       await _serviceProvider.New<BasketService>().RemoveItemsFromBasket(customer.Id, request);
+
+      return Ok();
     }
 
-
-    [HttpGet("getCustomerBasket")]
+    [HttpGet]
     public async Task<Basket> GetCustomerBasket()
     {
       var customer = await GetCustomer();
 
-      var basket = await _serviceProvider.New<BasketService>().GetCustomerBasket(customer.Id);
       return await _serviceProvider.New<BasketService>().GetCustomerBasket(customer.Id);
     }
 
-
-    [HttpDelete]
-    public void ClearCookies()
+    [HttpDelete("clear")]
+    public async Task ClearCustomerBasket()
     {
-      Response.Cookies.Delete("user-id");
-    }
+      var customer = await GetCustomer();
 
+      await _serviceProvider.New<BasketService>().ClearCustomerBasket(customer.Id);
+    }
 
     private async Task<Customer> GetCustomer()
     {
       var userId = Request.Cookies["user-id"];
 
-      if (string.IsNullOrEmpty(userId))
+      if (!string.IsNullOrEmpty(userId))
+      {
+        var customer = await _serviceProvider.New<CustomerService>().GetCustomerById(new Guid(userId));
+
+        if (customer == null)
+        {
+          customer = new Customer
+          {
+            Id = new Guid(userId),
+            Name = "Guest"
+          };
+
+          await _serviceProvider.New<CustomerService>().AddCustomer(customer);
+        }
+
+        return customer;
+      }
+      else
       {
         var customer = new Customer
         {
-          Id = Guid.NewGuid(),
           Name = "Guest"
         };
 
         await _serviceProvider.New<CustomerService>().AddCustomer(customer);
 
         Response.Cookies.Append("user-id", customer.Id.ToString());
-        return customer;
-      }
-      else
-      {
-        var customer = await _serviceProvider.New<CustomerService>().GetCustomerById(new Guid(userId));
-
         return customer;
       }
     }

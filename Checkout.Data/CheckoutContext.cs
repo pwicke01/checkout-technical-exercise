@@ -10,6 +10,7 @@ namespace Checkout.Data
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Basket> Baskets { get; set; }
     public DbSet<Item> Items { get; set; }
+    public DbSet<Product> Products { get; set; }
 
     public CheckoutContext(DbContextOptions<CheckoutContext> options) : base(options)
     {
@@ -30,6 +31,10 @@ namespace Checkout.Data
       modelBuilder.ApplyConfiguration(new BasketMapping());
       modelBuilder.ApplyConfiguration(new ItemMapping());
       modelBuilder.ApplyConfiguration(new ProductMapping());
+
+      modelBuilder.Entity<Product>().HasData(new Product { Id = Guid.NewGuid(), Name = "Tin of beans", Description = "A tin of beans", Price = 0.99M });
+      modelBuilder.Entity<Product>().HasData(new Product { Id = Guid.NewGuid(), Name = "Wrench", Description = "A tool", Price = 8.99M });
+      modelBuilder.Entity<Product>().HasData(new Product { Id = Guid.NewGuid(), Name = "Shampoo", Description = "A bottle of shampoo", Price = 3.99M });
     }
 
   }

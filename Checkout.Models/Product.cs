@@ -11,8 +11,9 @@ namespace Checkout.Models
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
+    public decimal Price { get; set; }
 
-    //[JsonIgnore]
+    [JsonIgnore]
     public Collection<Item> Items { get; set; }
   }
 }
