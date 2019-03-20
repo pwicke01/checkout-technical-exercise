@@ -18,8 +18,8 @@ namespace Checkout.Client.Tests
     [TestMethod]
     public async Task Test_Framework_Compatible()
     {
-      var custs = await _checkoutClient.GetCustomers();
-      Assert.IsTrue(custs != null && custs.Any());
+      var products = await _checkoutClient.GetProducts();
+      Assert.IsTrue(products.Any());
     }
   }
 }

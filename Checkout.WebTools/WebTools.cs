@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Checkout.WebTools
     public static async Task<T> Get<T>(this HttpClient http, string requestUri)
     {
       var result = await http.GetStringAsync(requestUri);
-
+      
       return JsonConvert.DeserializeObject<T>(result);
     }
 
@@ -20,6 +21,19 @@ namespace Checkout.WebTools
       var content = new StringContent(body, Encoding.UTF8, "application/json");
 
       await http.PutAsync(requestUri, content);
+    }
+
+    public static async Task Delete(this HttpClient http, string requestUri, object requestBody = null)
+    {
+      var body = JsonConvert.SerializeObject(requestBody);
+      var content = new StringContent(body, Encoding.UTF8, "application/json");
+
+      var request = new HttpRequestMessage(HttpMethod.Delete, requestUri)
+      {
+        Content = content
+      };
+
+      await http.SendAsync(request);
     }
   }
 }

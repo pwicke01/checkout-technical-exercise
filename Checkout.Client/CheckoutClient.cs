@@ -1,4 +1,5 @@
 ﻿using Checkout.Models;
+using Checkout.Models.Requests;
 using Checkout.WebTools;
 using System;
 using System.Net.Http;
@@ -19,9 +20,30 @@ namespace Checkout.Client
       _http = http;
     }
 
-    public async Task<Customer[]> GetCustomers()
+    public async Task AddItemsToBasket(AddItemsRequest request)
     {
-      return await _http.Get<Customer[]>("api/checkout/customer");
+      await _http.Put("api/basket/items", request);
+    }
+
+    
+    public async Task RemoveItemsFromBasket(RemoveItemsRequest request)
+    {
+      await _http.Delete("api/basket/items", request);
+    }
+
+    public async Task<Basket> GetCustomerBasket()
+    {
+      return await _http.Get<Basket>("api/basket");
+    }
+
+    public async Task ClearCustomerBasket()
+    {
+      await _http.Delete("api/basket/clear");
+    }
+    
+    public async Task<Product[]> GetProducts()
+    {
+      return await _http.Get<Product[]>("api/product");
     }
   }
 }

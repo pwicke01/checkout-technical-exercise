@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Checkout.Api.Controllers
 {
-  [Route("product")]
+  [Route("api/product")]
   public class ProductController : ControllerBase
   {
     private readonly IServiceProvider _serviceProvider;
