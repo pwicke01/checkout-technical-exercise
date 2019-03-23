@@ -25,6 +25,5 @@ namespace Checkout.Domain
     {
       return await _checkoutContext.Customers.FindAsync(id);
     }
-
   }
 }

@@ -24,7 +24,6 @@ namespace Checkout.Client
     {
       await _http.Put("api/basket/items", request);
     }
-
     
     public async Task RemoveItemsFromBasket(RemoveItemsRequest request)
     {

@@ -117,6 +117,8 @@ namespace Checkout.Tests
       Assert.Equal(0, actualQuantity);
     }
 
+    //Methods shared between the test cases
+
     private async Task<int> GetNumberOfItemsInBasket(Guid? productId = null)
     {
       var basket = await _serviceProvider.New<BasketService>().GetCustomerBasket(_customer.Id);
